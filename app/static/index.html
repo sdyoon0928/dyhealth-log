@@ -2,552 +2,141 @@
 <html lang="ko">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#0F1B23">
 <title>DY 헬스 로그</title>
+
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
-<style>
-:root{
-  --ink:#0F1B23;
-  --ink-60:#566873;
-  --ink-40:#8A99A3;
-  --paper:#E6EAED;
-  --surface:#FFFFFF;
-  --line:#D2DAE0;
-  --accent:#12615C;
-  --ok:#2E7D62;
-  --warn:#A96F16;
-  --risk:#B23B33;
-  --t-low:#CBDAE8;
-  --t-ok:#CDE3D8;
-  --t-warn:#EFDFC0;
-  --t-risk:#EFD2CF;
-  --mono:"IBM Plex Mono",ui-monospace,SFMono-Regular,Menlo,monospace;
-  --sans:"Pretendard","Pretendard Variable",-apple-system,BlinkMacSystemFont,system-ui,sans-serif;
-}
-*{box-sizing:border-box;margin:0;padding:0}
-body{
-  font-family:var(--sans);
-  background:var(--paper);
-  color:var(--ink);
-  line-height:1.5;
-  -webkit-font-smoothing:antialiased;
-}
 
-/* ── 헤더 ── */
-.topbar{
-  background:var(--ink);
-  color:#fff;
-  padding:18px 28px;
-  display:flex;
-  align-items:baseline;
-  gap:14px;
-  flex-wrap:wrap;
-}
-.brand{font-size:17px;font-weight:700;letter-spacing:-.02em}
-.brand em{font-style:normal;color:#6FCBAF}
-.topbar .sub{font-family:var(--mono);font-size:11px;color:#7E939F;letter-spacing:.06em}
-.topbar .spacer{flex:1}
-.topbar a{
-  font-family:var(--mono);font-size:11px;color:#9FB2BD;
-  text-decoration:none;border-bottom:1px solid #3A4B57;padding-bottom:1px;
-}
-.topbar a:hover{color:#fff}
-
-/* ── 레이아웃 ── */
-.wrap{max-width:1180px;margin:0 auto;padding:26px 22px 70px}
-.grid{display:grid;grid-template-columns:352px 1fr;gap:22px;align-items:start}
-@media(max-width:900px){.grid{grid-template-columns:1fr}}
-
-.panel{
-  background:var(--surface);
-  border:1px solid var(--line);
-  border-radius:3px;
-}
-.panel-head{
-  padding:13px 18px;
-  border-bottom:1px solid var(--line);
-  display:flex;align-items:center;justify-content:space-between;gap:10px;
-}
-.panel-head h2{
-  font-size:12px;font-weight:600;letter-spacing:.14em;
-  text-transform:uppercase;color:var(--ink-60);
-}
-.panel-body{padding:18px}
-
-/* ── 폼 ── */
-.field{margin-bottom:13px}
-.field label{
-  display:block;font-size:11px;font-weight:600;color:var(--ink-60);
-  letter-spacing:.05em;margin-bottom:5px;
-}
-.field .hint{font-weight:400;color:var(--ink-40);letter-spacing:0}
-input,select,textarea{
-  width:100%;padding:9px 11px;
-  border:1px solid var(--line);border-radius:2px;
-  background:#FBFCFC;color:var(--ink);
-  font-family:var(--mono);font-size:14px;
-}
-textarea{font-family:var(--sans);resize:vertical;min-height:56px}
-input:focus,select,textarea:focus{outline:none}
-input:focus,select:focus,textarea:focus{
-  border-color:var(--accent);
-  box-shadow:0 0 0 3px rgba(18,97,92,.13);
-  background:#fff;
-}
-.row2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
-
-button{
-  font-family:var(--sans);font-size:13px;font-weight:600;
-  border:none;border-radius:2px;cursor:pointer;
-}
-.btn-main{
-  width:100%;padding:11px;background:var(--accent);color:#fff;
-  letter-spacing:.02em;transition:background .15s;
-}
-.btn-main:hover{background:#0E514D}
-.btn-main:active{background:#0A403D}
-.btn-ghost{
-  padding:7px 12px;background:transparent;color:var(--ink-60);
-  border:1px solid var(--line);
-}
-.btn-ghost:hover{border-color:var(--ink-40);color:var(--ink)}
-.btn-del{
-  padding:4px 9px;background:transparent;color:var(--ink-40);
-  border:1px solid var(--line);font-size:11px;font-family:var(--mono);
-}
-.btn-del:hover{color:var(--risk);border-color:var(--risk)}
-:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
-
-.divider{
-  height:1px;background:var(--line);margin:18px 0;
-  position:relative;
-}
-.divider span{
-  position:absolute;top:-7px;left:0;background:var(--surface);
-  padding-right:9px;font-family:var(--mono);font-size:10px;
-  letter-spacing:.12em;color:var(--ink-40);
-}
-
-/* ── 상태 메시지 ── */
-.status{
-  margin-top:13px;padding:10px 12px;border-radius:2px;
-  font-size:12.5px;display:none;border-left:3px solid;
-}
-.status.show{display:block}
-.status.ok{background:#EAF3EF;border-color:var(--ok);color:#1F5A46}
-.status.err{background:#F7EAE9;border-color:var(--risk);color:#8C2C25}
-.status code{
-  font-family:var(--mono);font-size:11px;
-  background:rgba(0,0,0,.06);padding:1px 5px;border-radius:2px;
-}
-
-/* ── 기록 카드 ── */
-.cards{display:flex;flex-direction:column;gap:12px}
-.card{
-  background:var(--surface);border:1px solid var(--line);
-  border-radius:3px;padding:17px 19px;
-}
-.card-top{
-  display:flex;align-items:center;justify-content:space-between;
-  gap:12px;margin-bottom:15px;
-}
-.card-date{
-  font-family:var(--mono);font-size:15px;font-weight:500;
-  letter-spacing:.01em;
-}
-.card-extra{
-  font-family:var(--mono);font-size:11px;color:var(--ink-40);
-  margin-top:2px;
-}
-
-.metric{margin-bottom:15px}
-.metric:last-of-type{margin-bottom:0}
-.metric-head{
-  display:flex;align-items:baseline;gap:9px;margin-bottom:7px;
-}
-.metric-name{
-  font-size:11px;font-weight:600;letter-spacing:.1em;
-  color:var(--ink-60);min-width:44px;
-}
-.metric-val{font-family:var(--mono);font-size:16px;font-weight:500}
-.tag{
-  font-size:11px;font-weight:600;padding:2px 8px;border-radius:2px;
-  margin-left:auto;
-}
-.tag.c-ok{background:var(--t-ok);color:#1F5A46}
-.tag.c-warn{background:var(--t-warn);color:#7C5210}
-.tag.c-risk{background:var(--t-risk);color:#8C2C25}
-.tag.c-low{background:var(--t-low);color:#2C4A63}
-
-/* ── 게이지 (시그니처) ── */
-.gauge{position:relative;height:9px;margin-bottom:3px}
-.gauge-track{display:flex;height:100%;gap:1px}
-.gauge-track span{display:block}
-.gauge-mark{
-  position:absolute;top:-3px;width:2px;height:15px;
-  background:var(--ink);transform:translateX(-1px);
-}
-.gauge-mark::before{
-  content:"";position:absolute;top:-4px;left:-2px;
-  border:3px solid transparent;border-top-color:var(--ink);
-}
-.ticks{display:flex;gap:1px}
-.ticks span{
-  font-family:var(--mono);font-size:9.5px;color:var(--ink-40);
-  text-align:right;padding-right:2px;
-}
-.bp-pair{display:grid;grid-template-columns:1fr 1fr;gap:14px}
-.bp-pair small{
-  font-family:var(--mono);font-size:9.5px;color:var(--ink-40);
-  display:block;margin-bottom:4px;
-}
-
-.memo{
-  margin-top:14px;padding-top:12px;border-top:1px solid var(--line);
-  font-size:13px;color:var(--ink-60);
-}
-.warnings{
-  margin-top:13px;padding:11px 13px;
-  background:#FAF4EC;border-left:3px solid var(--warn);
-  border-radius:2px;
-}
-.warnings li{
-  list-style:none;font-size:12.5px;color:#6E4A0F;
-  padding-left:15px;position:relative;margin-bottom:3px;
-}
-.warnings li:last-child{margin-bottom:0}
-.warnings li::before{
-  content:"·";position:absolute;left:4px;font-weight:700;
-}
-
-.empty{
-  padding:52px 20px;text-align:center;color:var(--ink-40);
-  font-size:13.5px;
-}
-.empty strong{display:block;color:var(--ink-60);font-size:15px;margin-bottom:6px}
-</style>
+<link rel="stylesheet" href="/static/style.css">
 </head>
 <body>
 
-<header class="topbar">
-  <div class="brand">DY <em>헬스 로그</em></div>
-  <div class="sub">v0.1.0</div>
-  <div class="spacer"></div>
-  <a href="/docs" target="_blank">API 문서</a>
-</header>
+<div class="phone">
 
-<div class="wrap">
-<div class="grid">
+  <!-- ── 상단 바 ── -->
+  <header class="appbar">
+    <div class="appbar__brand">DY <em>헬스 로그</em></div>
+    <label class="picker">
+      <select id="userSel" aria-label="사용자 선택"></select>
+    </label>
+  </header>
 
-  <!-- 왼쪽: 입력 -->
-  <section class="panel">
-    <div class="panel-head"><h2>기록 남기기</h2></div>
-    <div class="panel-body">
+  <!-- ── 기간 필터 ── -->
+  <nav class="chips" id="chips">
+    <button class="chip is-on" data-days="0">전체</button>
+    <button class="chip" data-days="7">최근 7일</button>
+    <button class="chip" data-days="30">최근 30일</button>
+  </nav>
 
-      <div class="field">
-        <label for="userSel">사용자</label>
-        <select id="userSel"></select>
-      </div>
+  <main class="feed" id="feed">
+    <!-- 요약 카드 + 기록 카드가 여기 렌더링됩니다 -->
+  </main>
 
-      <div class="divider"><span>새 사용자</span></div>
-
-      <div class="row2">
-        <div class="field">
-          <label for="uEmail">이메일</label>
-          <input id="uEmail" type="email" placeholder="dy@example.com">
-        </div>
-        <div class="field">
-          <label for="uNick">이름</label>
-          <input id="uNick" type="text" placeholder="동윤">
-        </div>
-      </div>
-      <button class="btn-ghost" id="btnUser" style="width:100%">사용자 추가</button>
-
-      <div class="divider"><span>측정값</span></div>
-
-      <div class="field">
-        <label for="fDate">측정일</label>
-        <input id="fDate" type="date">
-      </div>
-      <div class="row2">
-        <div class="field">
-          <label for="fWeight">몸무게 <span class="hint">kg</span></label>
-          <input id="fWeight" type="number" step="0.1" placeholder="68.5">
-        </div>
-        <div class="field">
-          <label for="fHeight">키 <span class="hint">cm</span></label>
-          <input id="fHeight" type="number" step="0.1" placeholder="170">
-        </div>
-      </div>
-      <div class="row2">
-        <div class="field">
-          <label for="fSys">수축기 혈압</label>
-          <input id="fSys" type="number" placeholder="120">
-        </div>
-        <div class="field">
-          <label for="fDia">이완기 혈압</label>
-          <input id="fDia" type="number" placeholder="80">
-        </div>
-      </div>
-      <div class="field">
-        <label for="fSugar">공복 혈당 <span class="hint">mg/dL</span></label>
-        <input id="fSugar" type="number" placeholder="95">
-      </div>
-      <div class="row2">
-        <div class="field">
-          <label for="fSteps">걸음 수 <span class="hint">선택</span></label>
-          <input id="fSteps" type="number" placeholder="8000">
-        </div>
-        <div class="field">
-          <label for="fSleep">수면 <span class="hint">시간, 선택</span></label>
-          <input id="fSleep" type="number" step="0.1" placeholder="7.5">
-        </div>
-      </div>
-      <div class="field">
-        <label for="fMemo">메모 <span class="hint">선택</span></label>
-        <textarea id="fMemo" placeholder="오늘 컨디션은..."></textarea>
-      </div>
-
-      <button class="btn-main" id="btnSave">기록 저장</button>
-      <div class="status" id="msg"></div>
-    </div>
-  </section>
-
-  <!-- 오른쪽: 목록 -->
-  <section class="panel">
-    <div class="panel-head">
-      <h2>기록 보기</h2>
-      <button class="btn-ghost" id="btnReload">새로고침</button>
-    </div>
-    <div class="panel-body">
-      <div class="cards" id="list"></div>
-    </div>
-  </section>
-
-</div>
+  <!-- ── 기록 추가 버튼 ── -->
+  <button class="fab" id="fabAdd" aria-label="기록 추가">
+    <svg viewBox="0 0 24 24" width="24" height="24" aria-hidden="true">
+      <path d="M12 5v14M5 12h14" stroke="currentColor" stroke-width="2.2"
+            stroke-linecap="round" fill="none"/>
+    </svg>
+  </button>
 </div>
 
-<script>
-const $ = id => document.getElementById(id);
-const API = "";                       // 같은 서버에서 서빙 → 경로만 사용
+<!-- ── 바텀시트: 기록 추가 ── -->
+<div class="scrim" id="scrim" hidden></div>
 
-/* ── 분류 구간 정의 (서버 health_rules.py와 동일 기준) ── */
-const SCALES = {
-  bmi:   {min:15, max:35, zones:[
-           {to:18.5,c:"var(--t-low)"},  {to:23,c:"var(--t-ok)"},
-           {to:25, c:"var(--t-warn)"},  {to:35,c:"var(--t-risk)"}]},
-  sys:   {min:90, max:170, zones:[
-           {to:120,c:"var(--t-ok)"}, {to:140,c:"var(--t-warn)"}, {to:170,c:"var(--t-risk)"}]},
-  dia:   {min:50, max:110, zones:[
-           {to:80,c:"var(--t-ok)"},  {to:90,c:"var(--t-warn)"},  {to:110,c:"var(--t-risk)"}]},
-  sugar: {min:70, max:160, zones:[
-           {to:100,c:"var(--t-ok)"}, {to:126,c:"var(--t-warn)"}, {to:160,c:"var(--t-risk)"}]},
-};
+<section class="sheet" id="sheetLog" hidden aria-labelledby="sheetLogTitle">
+  <div class="sheet__grip"></div>
+  <header class="sheet__head">
+    <h2 id="sheetLogTitle">오늘의 기록</h2>
+    <button class="icon-btn" data-close aria-label="닫기">✕</button>
+  </header>
 
-const TAGCLASS = {
-  "정상":"c-ok", "저체중":"c-low", "과체중":"c-warn", "비만":"c-risk",
-  "주의":"c-warn", "고혈압":"c-risk", "공복혈당장애":"c-warn", "당뇨 의심":"c-risk",
-};
-
-function gauge(key, value){
-  const s = SCALES[key];
-  const span = s.max - s.min;
-  let prev = s.min, segs = "", ticks = "";
-  s.zones.forEach((z, i) => {
-    const w = (z.to - prev) / span;
-    segs  += `<span style="flex:${w};background:${z.c}"></span>`;
-    ticks += `<span style="flex:${w}">${i < s.zones.length-1 ? z.to : ""}</span>`;
-    prev = z.to;
-  });
-  const pct = Math.min(1, Math.max(0, (value - s.min) / span)) * 100;
-  return `<div class="gauge">
-            <div class="gauge-track">${segs}</div>
-            <div class="gauge-mark" style="left:${pct}%"></div>
-          </div>
-          <div class="ticks">${ticks}</div>`;
-}
-
-function tag(text){
-  return `<span class="tag ${TAGCLASS[text] || "c-ok"}">${text}</span>`;
-}
-
-/* ── 서버 응답 처리 ── */
-async function callApi(path, options){
-  const res  = await fetch(API + path, options);
-  const body = res.status === 204 ? null : await res.json().catch(() => null);
-  if(!res.ok) throw {status: res.status, detail: readDetail(body)};
-  return body;
-}
-
-// 422는 detail이 배열, 나머지는 문자열
-function readDetail(body){
-  if(!body || !body.detail) return "알 수 없는 오류입니다";
-  if(typeof body.detail === "string") return body.detail;
-  return body.detail
-    .map(e => `${(e.loc || []).slice(-1)[0]}: ${e.msg.replace("Value error, ", "")}`)
-    .join(" / ");
-}
-
-function say(text, isError, code){
-  const el = $("msg");
-  el.className = "status show " + (isError ? "err" : "ok");
-  el.innerHTML = (code ? `<code>${code}</code> ` : "") + text;
-}
-
-/* ── 사용자 ── */
-async function loadUsers(keepId){
-  try{
-    const users = await callApi("/users");
-    const sel = $("userSel");
-    sel.innerHTML = users.length
-      ? users.map(u => `<option value="${u.id}">${u.nickname} · ${u.email}</option>`).join("")
-      : `<option value="">— 사용자를 먼저 추가하세요 —</option>`;
-    if(keepId) sel.value = keepId;
-    loadLogs();
-  }catch(e){ say(e.detail, true, e.status); }
-}
-
-$("btnUser").onclick = async () => {
-  const email = $("uEmail").value.trim(), nickname = $("uNick").value.trim();
-  if(!email || !nickname) return say("이메일과 이름을 모두 입력하세요.", true);
-  try{
-    const u = await callApi("/users", {
-      method:"POST",
-      headers:{"Content-Type":"application/json"},
-      body: JSON.stringify({email, nickname})
-    });
-    $("uEmail").value = ""; $("uNick").value = "";
-    say(`${u.nickname} 님을 추가했습니다.`, false, 200);
-    loadUsers(u.id);
-  }catch(e){ say(e.detail, true, e.status); }
-};
-
-/* ── 기록 저장 ── */
-function numOrNull(id){
-  const v = $(id).value.trim();
-  return v === "" ? null : Number(v);
-}
-
-$("btnSave").onclick = async () => {
-  const uid = $("userSel").value;
-  if(!uid) return say("사용자를 먼저 선택하세요.", true);
-
-  const payload = {
-    date:        $("fDate").value,
-    weight:      numOrNull("fWeight"),
-    height:      numOrNull("fHeight"),
-    systolic:    numOrNull("fSys"),
-    diastolic:   numOrNull("fDia"),
-    blood_sugar: numOrNull("fSugar"),
-    steps:       numOrNull("fSteps"),
-    sleep_hours: numOrNull("fSleep"),
-    memo:        $("fMemo").value.trim() || null,
-  };
-
-  try{
-    await callApi(`/users/${uid}/logs`, {
-      method:"POST",
-      headers:{"Content-Type":"application/json"},
-      body: JSON.stringify(payload)
-    });
-    say("기록을 저장했습니다.", false, 200);
-    $("fMemo").value = "";
-    loadLogs();
-  }catch(e){ say(e.detail, true, e.status); }
-};
-
-/* ── 기록 목록 ── */
-async function loadLogs(){
-  const uid = $("userSel").value;
-  const box = $("list");
-  if(!uid){
-    box.innerHTML = `<div class="empty"><strong>아직 사용자가 없습니다</strong>왼쪽에서 사용자를 추가하면 기록을 남길 수 있습니다.</div>`;
-    return;
-  }
-  try{
-    const logs = await callApi(`/users/${uid}/logs`);
-    box.innerHTML = logs.length
-      ? logs.map(cardHtml).join("")
-      : `<div class="empty"><strong>기록이 비어 있습니다</strong>왼쪽 폼에서 오늘의 측정값을 남겨보세요.</div>`;
-  }catch(e){
-    box.innerHTML = `<div class="empty"><strong>불러오지 못했습니다</strong>${e.detail}</div>`;
-  }
-}
-
-function cardHtml(l){
-  const extra = [
-    l.steps       != null ? `${l.steps.toLocaleString()} 걸음` : null,
-    l.sleep_hours != null ? `수면 ${l.sleep_hours}시간`        : null,
-  ].filter(Boolean).join("  ·  ");
-
-  return `
-  <article class="card">
-    <div class="card-top">
-      <div>
-        <div class="card-date">${l.date}</div>
-        ${extra ? `<div class="card-extra">${extra}</div>` : ""}
-      </div>
-      <button class="btn-del" onclick="removeLog(${l.id})">삭제</button>
+  <div class="sheet__body">
+    <div class="field">
+      <label for="fDate">측정일</label>
+      <input id="fDate" type="date">
     </div>
 
-    <div class="metric">
-      <div class="metric-head">
-        <span class="metric-name">BMI</span>
-        <span class="metric-val">${l.bmi}</span>
-        ${tag(l.bmi_category)}
+    <div class="grid2">
+      <div class="field">
+        <label for="fWeight">몸무게 <span>kg</span></label>
+        <input id="fWeight" type="number" inputmode="decimal" step="0.1" placeholder="68.5">
       </div>
-      ${gauge("bmi", l.bmi)}
-    </div>
-
-    <div class="metric">
-      <div class="metric-head">
-        <span class="metric-name">혈압</span>
-        <span class="metric-val">${l.systolic} / ${l.diastolic}</span>
-        ${tag(l.bp_category)}
-      </div>
-      <div class="bp-pair">
-        <div><small>수축기</small>${gauge("sys", l.systolic)}</div>
-        <div><small>이완기</small>${gauge("dia", l.diastolic)}</div>
+      <div class="field">
+        <label for="fHeight">키 <span>cm</span></label>
+        <input id="fHeight" type="number" inputmode="decimal" step="0.1" placeholder="170">
       </div>
     </div>
 
-    <div class="metric">
-      <div class="metric-head">
-        <span class="metric-name">혈당</span>
-        <span class="metric-val">${l.blood_sugar}</span>
-        ${tag(l.sugar_category)}
+    <div class="grid2">
+      <div class="field">
+        <label for="fSys">수축기 혈압</label>
+        <input id="fSys" type="number" inputmode="numeric" placeholder="120">
       </div>
-      ${gauge("sugar", l.blood_sugar)}
+      <div class="field">
+        <label for="fDia">이완기 혈압</label>
+        <input id="fDia" type="number" inputmode="numeric" placeholder="80">
+      </div>
     </div>
 
-    ${l.memo ? `<div class="memo">${escapeHtml(l.memo)}</div>` : ""}
-    ${l.warnings && l.warnings.length
-      ? `<ul class="warnings">${l.warnings.map(w => `<li>${w}</li>`).join("")}</ul>` : ""}
-  </article>`;
-}
+    <div class="field">
+      <label for="fSugar">공복 혈당 <span>mg/dL</span></label>
+      <input id="fSugar" type="number" inputmode="numeric" placeholder="95">
+    </div>
 
-function escapeHtml(s){
-  return s.replace(/[&<>"]/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
-}
+    <div class="grid2">
+      <div class="field">
+        <label for="fSteps">걸음 수 <span>선택</span></label>
+        <input id="fSteps" type="number" inputmode="numeric" placeholder="8000">
+      </div>
+      <div class="field">
+        <label for="fSleep">수면 <span>시간 · 선택</span></label>
+        <input id="fSleep" type="number" inputmode="decimal" step="0.1" placeholder="7.5">
+      </div>
+    </div>
 
-async function removeLog(id){
-  if(!confirm("이 기록을 삭제할까요?")) return;
-  try{
-    await callApi(`/logs/${id}`, {method:"DELETE"});
-    say("기록을 삭제했습니다.", false, 200);
-    loadLogs();
-  }catch(e){ say(e.detail, true, e.status); }
-}
+    <div class="field">
+      <label for="fMemo">메모 <span>선택</span></label>
+      <textarea id="fMemo" rows="2" placeholder="오늘 컨디션은..."></textarea>
+    </div>
+  </div>
 
-/* ── 초기화 ── */
-$("userSel").onchange = loadLogs;
-$("btnReload").onclick = loadLogs;
-$("fDate").value = new Date().toISOString().slice(0, 10);
-$("fDate").max   = $("fDate").value;   // 미래 날짜 선택 차단
-loadUsers();
-</script>
+  <footer class="sheet__foot">
+    <button class="btn btn--primary" id="btnSave">기록 저장</button>
+  </footer>
+</section>
+
+<!-- ── 바텀시트: 사용자 추가 ── -->
+<section class="sheet sheet--short" id="sheetUser" hidden aria-labelledby="sheetUserTitle">
+  <div class="sheet__grip"></div>
+  <header class="sheet__head">
+    <h2 id="sheetUserTitle">사용자 추가</h2>
+    <button class="icon-btn" data-close aria-label="닫기">✕</button>
+  </header>
+
+  <div class="sheet__body">
+    <div class="field">
+      <label for="uNick">이름</label>
+      <input id="uNick" type="text" placeholder="동윤">
+    </div>
+    <div class="field">
+      <label for="uEmail">이메일</label>
+      <input id="uEmail" type="email" inputmode="email" placeholder="dy@example.com">
+    </div>
+  </div>
+
+  <footer class="sheet__foot">
+    <button class="btn btn--primary" id="btnUser">추가하기</button>
+  </footer>
+</section>
+
+<!-- ── 알림 토스트 ── -->
+<div class="toast" id="toast" role="status" aria-live="polite" hidden></div>
+
+<script src="/static/app.js"></script>
 </body>
 </html>

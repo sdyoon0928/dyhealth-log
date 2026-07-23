@@ -1,0 +1,602 @@
+/* ============================================================
+   DY 헬스 로그 — 스타일시트
+   구조: 1)토큰  2)기본  3)앱바  4)칩  5)피드/카드  6)게이지
+        7)FAB  8)바텀시트  9)폼  10)토스트  11)반응형
+   ============================================================ */
+
+/* ── 1) 디자인 토큰 ─────────────────────────────────────── */
+:root{
+  /* 색: 잉크(글자) */
+  --ink:      #0F1B23;
+  --ink-60:   #566873;
+  --ink-40:   #8A99A3;
+
+  /* 색: 배경/면 */
+  --paper:    #E6EAED;
+  --surface:  #FFFFFF;
+  --line:     #D2DAE0;
+
+  /* 색: 강조 */
+  --accent:      #12615C;
+  --accent-lift: #17756F;
+  --accent-deep: #0C4643;
+
+  /* 색: 상태 */
+  --ok:   #2E7D62;
+  --warn: #A96F16;
+  --risk: #B23B33;
+
+  /* 색: 구간 띠(게이지) */
+  --t-low:  #CBDAE8;
+  --t-ok:   #CDE3D8;
+  --t-warn: #EFDFC0;
+  --t-risk: #EFD2CF;
+
+  /* 서체 */
+  --sans: "Pretendard","Pretendard Variable",-apple-system,BlinkMacSystemFont,system-ui,sans-serif;
+  --mono: "IBM Plex Mono",ui-monospace,SFMono-Regular,Menlo,monospace;
+
+  /* 여백 · 모서리 */
+  --gap:   14px;
+  --pad:   18px;
+  --r-sm:  8px;
+  --r-md:  14px;
+  --r-lg:  22px;
+
+  /* 그림자 */
+  --sh-card: 0 1px 2px rgba(15,27,35,.06), 0 4px 14px rgba(15,27,35,.05);
+  --sh-fab:  0 6px 20px rgba(18,97,92,.38);
+  --sh-sheet:0 -8px 40px rgba(15,27,35,.22);
+
+  /* 안전영역(노치 대응) */
+  --safe-b: env(safe-area-inset-bottom, 0px);
+}
+
+/* ── 2) 기본 ──────────────────────────────────────────── */
+*{ box-sizing:border-box; margin:0; padding:0; }
+
+/* hidden 속성이 항상 이기도록. .sheet{display:flex} 같은
+   클래스 선택자가 브라우저 기본 스타일을 덮어쓰기 때문에 필요하다. */
+[hidden]{ display:none !important; }
+
+html,body{ height:100%; }
+
+body{
+  font-family:var(--sans);
+  background:var(--paper);
+  color:var(--ink);
+  line-height:1.5;
+  -webkit-font-smoothing:antialiased;
+  overscroll-behavior-y:none;
+}
+
+/* 시트가 열렸을 때 뒤 화면 스크롤 잠금 */
+body.is-locked{ overflow:hidden; }
+
+button{ font-family:inherit; cursor:pointer; border:none; background:none; color:inherit; }
+select,input,textarea{ font-family:inherit; }
+
+:focus-visible{ outline:2px solid var(--accent); outline-offset:2px; border-radius:4px; }
+
+/* 화면 컨테이너: 모바일 폭 기준, 데스크톱에선 가운데 정렬 */
+.phone{
+  max-width:480px;
+  margin:0 auto;
+  min-height:100%;
+  background:var(--paper);
+  position:relative;
+  padding-bottom:calc(96px + var(--safe-b));
+}
+
+/* ── 3) 앱바 ──────────────────────────────────────────── */
+.appbar{
+  position:sticky;
+  top:0;
+  z-index:20;
+  display:flex;
+  align-items:center;
+  gap:10px;
+  padding:14px var(--pad);
+  background:var(--ink);
+  color:#fff;
+}
+
+.appbar__brand{
+  font-size:16px;
+  font-weight:700;
+  letter-spacing:-.02em;
+  white-space:nowrap;
+}
+.appbar__brand em{ font-style:normal; color:#6FCBAF; }
+
+/* 사용자 선택 드롭다운 */
+.picker{ margin-left:auto; position:relative; display:block; }
+.picker::after{
+  content:"";
+  position:absolute;
+  right:12px; top:50%;
+  width:6px; height:6px;
+  border-right:1.6px solid #9FB2BD;
+  border-bottom:1.6px solid #9FB2BD;
+  transform:translateY(-70%) rotate(45deg);
+  pointer-events:none;
+}
+.picker select{
+  appearance:none;
+  max-width:170px;
+  padding:7px 30px 7px 12px;
+  border:1px solid #33454F;
+  border-radius:999px;
+  background:#1B2C36;
+  color:#E4ECF0;
+  font-size:12.5px;
+  text-overflow:ellipsis;
+}
+
+/* ── 4) 기간 필터 칩 ──────────────────────────────────── */
+.chips{
+  position:sticky;
+  top:56px;
+  z-index:15;
+  display:flex;
+  gap:7px;
+  padding:12px var(--pad) 10px;
+  background:linear-gradient(var(--paper) 76%, rgba(230,234,237,0));
+}
+
+.chip{
+  padding:6px 14px;
+  border:1px solid var(--line);
+  border-radius:999px;
+  background:var(--surface);
+  color:var(--ink-60);
+  font-size:12.5px;
+  font-weight:600;
+  transition:background .16s, color .16s, border-color .16s;
+}
+.chip.is-on{
+  background:var(--accent);
+  border-color:var(--accent);
+  color:#fff;
+}
+
+/* ── 5) 피드 & 카드 ───────────────────────────────────── */
+.feed{
+  display:flex;
+  flex-direction:column;
+  gap:var(--gap);
+  padding:2px var(--pad) 0;
+}
+
+/* 요약 카드 (통계) */
+.summary{
+  background:var(--ink);
+  color:#fff;
+  border-radius:var(--r-md);
+  padding:16px 18px;
+  box-shadow:var(--sh-card);
+}
+.summary__label{
+  font-size:10.5px;
+  font-weight:600;
+  letter-spacing:.14em;
+  color:#7E939F;
+  text-transform:uppercase;
+  margin-bottom:12px;
+}
+.summary__grid{
+  display:grid;
+  grid-template-columns:repeat(4,1fr);
+  gap:8px;
+}
+.summary__cell{ min-width:0; }
+.summary__num{
+  display:block;
+  font-family:var(--mono);
+  font-size:18px;
+  font-weight:500;
+  letter-spacing:-.01em;
+}
+.summary__cap{
+  display:block;
+  margin-top:2px;
+  font-size:10.5px;
+  color:#8FA4AF;
+  white-space:nowrap;
+}
+
+/* 기록 카드 */
+.card{
+  position:relative;
+  background:var(--surface);
+  border-radius:var(--r-md);
+  padding:16px 18px 18px 20px;
+  box-shadow:var(--sh-card);
+  overflow:hidden;
+  animation:rise .28s ease both;
+}
+
+/* 왼쪽 상태 띠 — 그날의 가장 나쁜 항목 색 */
+.card::before{
+  content:"";
+  position:absolute;
+  left:0; top:0; bottom:0;
+  width:4px;
+  background:var(--stripe, var(--t-ok));
+}
+
+@keyframes rise{
+  from{ opacity:0; transform:translateY(8px); }
+  to  { opacity:1; transform:none; }
+}
+
+.card__top{
+  display:flex;
+  align-items:flex-start;
+  gap:10px;
+  margin-bottom:16px;
+}
+.card__date{
+  font-family:var(--mono);
+  font-size:15px;
+  font-weight:500;
+  letter-spacing:-.01em;
+}
+.card__day{
+  font-family:var(--sans);
+  font-size:12px;
+  color:var(--ink-40);
+  margin-left:5px;
+}
+.card__sub{
+  margin-top:3px;
+  font-family:var(--mono);
+  font-size:11px;
+  color:var(--ink-40);
+}
+.card__del{
+  margin-left:auto;
+  flex:none;
+  padding:4px 9px;
+  border:1px solid var(--line);
+  border-radius:var(--r-sm);
+  color:var(--ink-40);
+  font-family:var(--mono);
+  font-size:11px;
+}
+.card__del:hover{ color:var(--risk); border-color:var(--risk); }
+
+/* 지표 한 줄 */
+.metric{ margin-bottom:15px; }
+.metric:last-of-type{ margin-bottom:0; }
+
+.metric__head{
+  display:flex;
+  align-items:baseline;
+  gap:9px;
+  margin-bottom:7px;
+}
+.metric__name{
+  flex:none;
+  min-width:38px;
+  font-size:11px;
+  font-weight:600;
+  letter-spacing:.08em;
+  color:var(--ink-60);
+}
+.metric__val{
+  font-family:var(--mono);
+  font-size:16px;
+  font-weight:500;
+}
+
+/* 분류 배지 */
+.tag{
+  margin-left:auto;
+  flex:none;
+  padding:2px 9px;
+  border-radius:999px;
+  font-size:11px;
+  font-weight:600;
+}
+.tag--ok  { background:var(--t-ok);   color:#1F5A46; }
+.tag--warn{ background:var(--t-warn); color:#7C5210; }
+.tag--risk{ background:var(--t-risk); color:#8C2C25; }
+.tag--low { background:var(--t-low);  color:#2C4A63; }
+
+/* 혈압은 게이지 두 개를 나란히 */
+.bp{ display:grid; grid-template-columns:1fr 1fr; gap:12px; }
+.bp small{
+  display:block;
+  margin-bottom:4px;
+  font-family:var(--mono);
+  font-size:9.5px;
+  color:var(--ink-40);
+}
+
+/* 메모 */
+.memo{
+  margin-top:14px;
+  padding-top:12px;
+  border-top:1px solid var(--line);
+  font-size:13px;
+  color:var(--ink-60);
+  white-space:pre-wrap;
+}
+
+/* 경고 */
+.warnings{
+  margin-top:14px;
+  padding:11px 13px;
+  border-left:3px solid var(--warn);
+  border-radius:var(--r-sm);
+  background:#FAF4EC;
+  list-style:none;
+}
+.warnings li{
+  position:relative;
+  margin-bottom:3px;
+  padding-left:14px;
+  font-size:12.5px;
+  color:#6E4A0F;
+}
+.warnings li:last-child{ margin-bottom:0; }
+.warnings li::before{
+  content:"·";
+  position:absolute;
+  left:4px;
+  font-weight:700;
+}
+
+/* 빈 상태 · 로딩 */
+.empty{
+  padding:56px 24px;
+  text-align:center;
+  color:var(--ink-40);
+  font-size:13.5px;
+}
+.empty strong{
+  display:block;
+  margin-bottom:6px;
+  color:var(--ink-60);
+  font-size:15px;
+}
+
+/* ── 6) 구간 게이지 (이 앱의 시그니처) ─────────────────── */
+/* 숫자만으로는 판단이 어려우므로, 분류 구간을 띠로 깔고
+   내 값의 위치를 삼각 마커로 찍는다. */
+.gauge{
+  position:relative;
+  height:8px;
+  margin-bottom:3px;
+}
+.gauge__track{
+  display:flex;
+  gap:1px;
+  height:100%;
+  border-radius:2px;
+  overflow:hidden;
+}
+.gauge__track span{ display:block; }
+
+.gauge__mark{
+  position:absolute;
+  top:-3px;
+  width:2px;
+  height:14px;
+  background:var(--ink);
+  transform:translateX(-1px);
+}
+.gauge__mark::before{
+  content:"";
+  position:absolute;
+  top:-4px; left:-2px;
+  border:3px solid transparent;
+  border-top-color:var(--ink);
+}
+
+.ticks{ display:flex; gap:1px; }
+.ticks span{
+  padding-right:2px;
+  font-family:var(--mono);
+  font-size:9.5px;
+  color:var(--ink-40);
+  text-align:right;
+}
+
+/* ── 7) 플로팅 추가 버튼 ──────────────────────────────── */
+.fab{
+  position:fixed;
+  right:calc(50% - 240px + var(--pad));
+  bottom:calc(22px + var(--safe-b));
+  z-index:30;
+  display:grid;
+  place-items:center;
+  width:56px; height:56px;
+  border-radius:50%;
+  background:var(--accent);
+  color:#fff;
+  box-shadow:var(--sh-fab);
+  transition:transform .14s, background .16s;
+}
+.fab:hover{ background:var(--accent-lift); }
+.fab:active{ transform:scale(.93); }
+
+/* 화면이 좁으면 오른쪽 여백 기준으로 */
+@media (max-width:520px){
+  .fab{ right:var(--pad); }
+}
+
+/* ── 8) 바텀시트 ──────────────────────────────────────── */
+.scrim{
+  position:fixed;
+  inset:0;
+  z-index:40;
+  background:rgba(15,27,35,.42);
+  animation:fade .2s ease both;
+}
+@keyframes fade{ from{opacity:0} to{opacity:1} }
+
+.sheet{
+  position:fixed;
+  left:0; right:0; bottom:0;
+  z-index:50;
+  max-width:480px;
+  margin:0 auto;
+  max-height:88vh;
+  display:flex;
+  flex-direction:column;
+  background:var(--surface);
+  border-radius:var(--r-lg) var(--r-lg) 0 0;
+  box-shadow:var(--sh-sheet);
+  animation:slide-up .26s cubic-bezier(.22,.9,.3,1) both;
+}
+@keyframes slide-up{
+  from{ transform:translateY(100%); }
+  to  { transform:none; }
+}
+
+.sheet__grip{
+  width:38px; height:4px;
+  margin:9px auto 2px;
+  border-radius:999px;
+  background:var(--line);
+}
+
+.sheet__head{
+  display:flex;
+  align-items:center;
+  padding:10px var(--pad) 12px;
+  border-bottom:1px solid var(--line);
+}
+.sheet__head h2{
+  font-size:16px;
+  font-weight:700;
+  letter-spacing:-.01em;
+}
+
+.icon-btn{
+  margin-left:auto;
+  width:32px; height:32px;
+  border-radius:50%;
+  color:var(--ink-40);
+  font-size:15px;
+}
+.icon-btn:hover{ background:var(--paper); color:var(--ink); }
+
+.sheet__body{
+  flex:1;
+  overflow-y:auto;
+  padding:16px var(--pad);
+  -webkit-overflow-scrolling:touch;
+}
+
+.sheet__foot{
+  padding:12px var(--pad) calc(14px + var(--safe-b));
+  border-top:1px solid var(--line);
+  background:var(--surface);
+}
+
+/* ── 9) 폼 ────────────────────────────────────────────── */
+.field{ margin-bottom:13px; }
+.field:last-child{ margin-bottom:0; }
+
+.field label{
+  display:block;
+  margin-bottom:5px;
+  font-size:11.5px;
+  font-weight:600;
+  letter-spacing:.04em;
+  color:var(--ink-60);
+}
+.field label span{
+  font-weight:400;
+  letter-spacing:0;
+  color:var(--ink-40);
+}
+
+.field input,
+.field textarea{
+  width:100%;
+  padding:11px 12px;
+  border:1px solid var(--line);
+  border-radius:var(--r-sm);
+  background:#FBFCFC;
+  color:var(--ink);
+  font-family:var(--mono);
+  font-size:16px;          /* iOS 자동 확대 방지: 16px 미만 금지 */
+}
+.field textarea{
+  font-family:var(--sans);
+  font-size:15px;
+  resize:vertical;
+}
+.field input:focus,
+.field textarea:focus{
+  outline:none;
+  border-color:var(--accent);
+  background:#fff;
+  box-shadow:0 0 0 3px rgba(18,97,92,.12);
+}
+
+.grid2{ display:grid; grid-template-columns:1fr 1fr; gap:10px; }
+
+.btn{
+  width:100%;
+  padding:14px;
+  border-radius:var(--r-sm);
+  font-size:14.5px;
+  font-weight:600;
+  transition:background .16s, transform .1s;
+}
+.btn--primary{ background:var(--accent); color:#fff; }
+.btn--primary:hover{ background:var(--accent-lift); }
+.btn--primary:active{ background:var(--accent-deep); transform:scale(.99); }
+.btn[disabled]{ opacity:.55; pointer-events:none; }
+
+/* ── 10) 토스트 ───────────────────────────────────────── */
+.toast{
+  position:fixed;
+  left:50%;
+  bottom:calc(96px + var(--safe-b));
+  z-index:60;
+  max-width:min(400px, calc(100vw - 32px));
+  padding:11px 15px;
+  border-left:3px solid var(--ok);
+  border-radius:var(--r-sm);
+  background:var(--ink);
+  color:#EAF0F3;
+  font-size:13px;
+  transform:translateX(-50%);
+  box-shadow:0 8px 28px rgba(15,27,35,.3);
+  animation:toast-in .22s ease both;
+}
+.toast--err{ border-left-color:var(--risk); }
+.toast code{
+  margin-right:6px;
+  padding:1px 6px;
+  border-radius:4px;
+  background:rgba(255,255,255,.13);
+  font-family:var(--mono);
+  font-size:11px;
+}
+@keyframes toast-in{
+  from{ opacity:0; transform:translate(-50%, 10px); }
+  to  { opacity:1; transform:translate(-50%, 0); }
+}
+
+/* ── 11) 접근성 · 반응형 ──────────────────────────────── */
+@media (prefers-reduced-motion: reduce){
+  *,*::before,*::after{
+    animation-duration:.001ms !important;
+    transition-duration:.001ms !important;
+  }
+}
+
+/* 데스크톱: 폰 프레임처럼 보이도록 살짝 띄움 */
+@media (min-width:521px){
+  body{ background:#DDE3E7; }
+  .phone{
+    box-shadow:0 0 0 1px var(--line), 0 20px 60px rgba(15,27,35,.1);
+  }
+}

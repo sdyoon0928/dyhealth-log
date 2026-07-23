@@ -37,5 +37,12 @@ API 문서: http://localhost:4923/docs
 | steps | int | 걸음 수 |
 | memo | str(500) | 메모 |
 
+### 화면 (가점 기능)
+- HTML/CSS/JS를 파일로 분리해 정적 리소스로 서빙 (`/static`)
+- 모바일 우선 레이아웃 · 카드 피드 + 바텀시트 입력
+- 분류 구간을 시각화한 게이지로 수치의 의미를 즉시 파악
+- 검색·통계 엔드포인트를 화면에서 실제로 사용
+
+
 ## 배포
 AWS Lightsail 인스턴스에서 Docker Compose로 실행.
