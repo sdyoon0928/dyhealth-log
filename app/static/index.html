@@ -15,28 +15,62 @@
 </head>
 <body>
 
-<div class="phone">
+<!-- ══════════ 로그인 · 회원가입 화면 ══════════ -->
+<div class="auth" id="authView" hidden>
+  <div class="auth__card">
 
-  <!-- ── 상단 바 ── -->
+    <div class="auth__brand">DY <em>헬스 로그</em></div>
+    <p class="auth__tag">매일의 수치를 남기면, 상태를 대신 읽어드립니다.</p>
+
+    <!-- 로그인 / 회원가입 전환 -->
+    <div class="seg" id="seg">
+      <button class="is-on" data-mode="login">로그인</button>
+      <button data-mode="register">회원가입</button>
+    </div>
+
+    <div class="field" id="fieldNick" hidden>
+      <label for="aNick">이름</label>
+      <input id="aNick" type="text" autocomplete="nickname" placeholder="동윤">
+    </div>
+
+    <div class="field">
+      <label for="aEmail">이메일</label>
+      <input id="aEmail" type="email" inputmode="email"
+             autocomplete="email" placeholder="dy@example.com">
+    </div>
+
+    <div class="field">
+      <label for="aPw">비밀번호 <span id="pwHint" hidden>8자 이상</span></label>
+      <input id="aPw" type="password" autocomplete="current-password"
+             placeholder="••••••••">
+    </div>
+
+    <p class="auth__err" id="authErr" hidden></p>
+
+    <button class="btn btn--primary" id="btnAuth">로그인</button>
+  </div>
+</div>
+
+
+<!-- ══════════ 앱 본 화면 ══════════ -->
+<div class="phone" id="appView" hidden>
+
   <header class="appbar">
     <div class="appbar__brand">DY <em>헬스 로그</em></div>
-    <label class="picker">
-      <select id="userSel" aria-label="사용자 선택"></select>
-    </label>
+    <div class="appbar__user">
+      <span id="meName"></span>
+      <button class="ghost-btn" id="btnLogout">로그아웃</button>
+    </div>
   </header>
 
-  <!-- ── 기간 필터 ── -->
   <nav class="chips" id="chips">
     <button class="chip is-on" data-days="0">전체</button>
     <button class="chip" data-days="7">최근 7일</button>
     <button class="chip" data-days="30">최근 30일</button>
   </nav>
 
-  <main class="feed" id="feed">
-    <!-- 요약 카드 + 기록 카드가 여기 렌더링됩니다 -->
-  </main>
+  <main class="feed" id="feed"></main>
 
-  <!-- ── 기록 추가 버튼 ── -->
   <button class="fab" id="fabAdd" aria-label="기록 추가">
     <svg viewBox="0 0 24 24" width="24" height="24" aria-hidden="true">
       <path d="M12 5v14M5 12h14" stroke="currentColor" stroke-width="2.2"
@@ -45,7 +79,8 @@
   </button>
 </div>
 
-<!-- ── 바텀시트: 기록 추가 ── -->
+
+<!-- ══════════ 바텀시트: 기록 추가 ══════════ -->
 <div class="scrim" id="scrim" hidden></div>
 
 <section class="sheet" id="sheetLog" hidden aria-labelledby="sheetLogTitle">
@@ -64,38 +99,45 @@
     <div class="grid2">
       <div class="field">
         <label for="fWeight">몸무게 <span>kg</span></label>
-        <input id="fWeight" type="number" inputmode="decimal" step="0.1" placeholder="68.5">
+        <input id="fWeight" type="number" inputmode="decimal"
+               step="0.1" min="0.1" max="499.9" placeholder="68.5">
       </div>
       <div class="field">
         <label for="fHeight">키 <span>cm</span></label>
-        <input id="fHeight" type="number" inputmode="decimal" step="0.1" placeholder="170">
+        <input id="fHeight" type="number" inputmode="decimal"
+               step="0.1" min="50.1" max="299.9" placeholder="170">
       </div>
     </div>
 
     <div class="grid2">
       <div class="field">
-        <label for="fSys">수축기 혈압</label>
-        <input id="fSys" type="number" inputmode="numeric" placeholder="120">
+        <label for="fSys">수축기 혈압 <span>60~180</span></label>
+        <input id="fSys" type="number" inputmode="numeric"
+               step="1" min="60" max="180" placeholder="120">
       </div>
       <div class="field">
-        <label for="fDia">이완기 혈압</label>
-        <input id="fDia" type="number" inputmode="numeric" placeholder="80">
+        <label for="fDia">이완기 혈압 <span>40~120</span></label>
+        <input id="fDia" type="number" inputmode="numeric"
+               step="1" min="40" max="120" placeholder="80">
       </div>
     </div>
 
     <div class="field">
-      <label for="fSugar">공복 혈당 <span>mg/dL</span></label>
-      <input id="fSugar" type="number" inputmode="numeric" placeholder="95">
+      <label for="fSugar">공복 혈당 <span>mg/dL · 40~400</span></label>
+      <input id="fSugar" type="number" inputmode="numeric"
+             step="1" min="40" max="400" placeholder="95">
     </div>
 
     <div class="grid2">
       <div class="field">
-        <label for="fSteps">걸음 수 <span>선택</span></label>
-        <input id="fSteps" type="number" inputmode="numeric" placeholder="8000">
+        <label for="fSteps">걸음 수 <span>최대 30,000 · 선택</span></label>
+        <input id="fSteps" type="number" inputmode="numeric"
+               step="1" min="0" max="30000" placeholder="8000">
       </div>
       <div class="field">
         <label for="fSleep">수면 <span>시간 · 선택</span></label>
-        <input id="fSleep" type="number" inputmode="decimal" step="0.1" placeholder="7.5">
+        <input id="fSleep" type="number" inputmode="decimal"
+               step="0.1" min="0" max="24" placeholder="7.5">
       </div>
     </div>
 
@@ -110,31 +152,7 @@
   </footer>
 </section>
 
-<!-- ── 바텀시트: 사용자 추가 ── -->
-<section class="sheet sheet--short" id="sheetUser" hidden aria-labelledby="sheetUserTitle">
-  <div class="sheet__grip"></div>
-  <header class="sheet__head">
-    <h2 id="sheetUserTitle">사용자 추가</h2>
-    <button class="icon-btn" data-close aria-label="닫기">✕</button>
-  </header>
 
-  <div class="sheet__body">
-    <div class="field">
-      <label for="uNick">이름</label>
-      <input id="uNick" type="text" placeholder="동윤">
-    </div>
-    <div class="field">
-      <label for="uEmail">이메일</label>
-      <input id="uEmail" type="email" inputmode="email" placeholder="dy@example.com">
-    </div>
-  </div>
-
-  <footer class="sheet__foot">
-    <button class="btn btn--primary" id="btnUser">추가하기</button>
-  </footer>
-</section>
-
-<!-- ── 알림 토스트 ── -->
 <div class="toast" id="toast" role="status" aria-live="polite" hidden></div>
 
 <script src="/static/app.js"></script>

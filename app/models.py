@@ -36,6 +36,11 @@ class User(Base):
     email: Mapped[str] = mapped_column(String(255), unique=True, index=True)
     nickname: Mapped[str] = mapped_column(String(50))
     # 생성 시각: 서버가 아니라 DB가 현재 시각을 자동으로 채움
+
+    # 비밀번호는 원문이 아니라 해시만 저장한다(되돌릴 수 없음).
+    password_hash: Mapped[str] = mapped_column(String(255))
+
+    
     created_at: Mapped[dt.datetime] = mapped_column(
         DateTime(timezone=True), server_default=func.now()
     )

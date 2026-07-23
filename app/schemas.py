@@ -40,16 +40,26 @@ class HealthLogBase(BaseModel):
     """
 
     date: dt.date
-    weight: float = Field(gt=0, lt=500)        # 0 초과 500 미만
-    height: float = Field(gt=50, lt=300)       # cm 기준
-    systolic: int = Field(ge=50, le=300)       # 수축기
-    diastolic: int = Field(ge=30, le=200)      # 이완기
-    blood_sugar: int = Field(ge=20, le=1000)   # 공복 혈당
+    weight: float = Field(gt=0, lt=500)          # kg · 소수 1자리로 반올림
+    height: float = Field(gt=50, lt=300)         # cm · 소수 1자리로 반올림
+    systolic: int = Field(ge=60, le=180)         # 수축기
+    diastolic: int = Field(ge=40, le=120)        # 이완기
+    blood_sugar: int = Field(ge=40, le=400)      # 공복 혈당
 
     # 선택 항목: 안 보내면 None
-    steps: int | None = Field(None, ge=0)
+    steps: int | None = Field(None, ge=0, le=30000)
     sleep_hours: float | None = Field(None, ge=0, le=24)
     memo: str | None = Field(None, max_length=500)
+
+    @field_validator("weight", "height", "sleep_hours")
+    @classmethod
+    def one_decimal(cls, v: float | None) -> float | None:
+        """소수점 한 자리로 반올림한다.
+
+        거부하지 않고 반올림하는 이유: 체중계가 68.53을 보여줬을 때
+        입력을 막기보다 68.5로 받아주는 편이 쓰기 편하다.
+        """
+        return None if v is None else round(v, 1)
 
     @field_validator("date")
     @classmethod
@@ -96,12 +106,18 @@ class HealthLogUpdate(BaseModel):
     date: dt.date | None = None
     weight: float | None = Field(None, gt=0, lt=500)
     height: float | None = Field(None, gt=50, lt=300)
-    systolic: int | None = Field(None, ge=50, le=300)
-    diastolic: int | None = Field(None, ge=30, le=200)
-    blood_sugar: int | None = Field(None, ge=20, le=1000)
-    steps: int | None = Field(None, ge=0)
+    systolic: int | None = Field(None, ge=60, le=180)
+    diastolic: int | None = Field(None, ge=40, le=120)
+    blood_sugar: int | None = Field(None, ge=40, le=400)
+    steps: int | None = Field(None, ge=0, le=30000)
     sleep_hours: float | None = Field(None, ge=0, le=24)
     memo: str | None = Field(None, max_length=500)
+
+    @field_validator("weight", "height", "sleep_hours")
+    @classmethod
+    def one_decimal(cls, v: float | None) -> float | None:
+        """소수점 한 자리로 반올림 (Base와 동일 규칙)."""
+        return None if v is None else round(v, 1)
 
 
 class HealthLogOut(HealthLogBase):
@@ -160,13 +176,24 @@ class HealthLogOut(HealthLogBase):
 # ---------- 사용자 ----------
 
 class UserCreate(BaseModel):
-    """사용자 생성(POST /users) 시 받는 입력.
+    """회원가입 입력.
 
-    EmailStr은 이메일 형식을 자동 검증한다(형식 틀리면 422).
-    사용처: main.py create_user의 payload
+    password는 bcrypt 제한(72바이트) 때문에 상한을 둔다.
+    사용처: main.py register의 payload
     """
     email: EmailStr
     nickname: str = Field(min_length=1, max_length=50)
+    password: str = Field(min_length=8, max_length=72)
+
+
+class Token(BaseModel):
+    """로그인 성공 시 발급되는 토큰.
+
+    클라이언트는 이후 요청 헤더에
+    Authorization: Bearer <access_token> 형태로 담아 보낸다.
+    """
+    access_token: str
+    token_type: str = "bearer"
 
 
 class UserOut(BaseModel):

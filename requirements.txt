@@ -5,3 +5,12 @@ psycopg[binary]==3.2.3
 pydantic==2.10.4
 pydantic-settings==2.7.0
 email-validator==2.2.0
+
+# 비밀번호를 되돌릴 수 없게 암호화
+bcrypt==4.2.1
+
+# 토큰 발급 및 검증
+PyJWT==2.10.1
+
+#Swagger의 Authorization 버튼(폼 전송)을 사용하기 위해 필요
+python-multipart==0.0.20

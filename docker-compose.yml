@@ -19,6 +19,7 @@ services:
     restart: always
     environment:
       DATABASE_URL: postgresql+psycopg://${POSTGRES_USER}:${POSTGRES_PASSWORD}@db:5432/${POSTGRES_DB}
+      SECRET_KEY: ${SECRET_KEY}
     ports:
       - "4923:8000"     # ← 바깥은 4923, 컨테이너 안은 8000
     depends_on:
