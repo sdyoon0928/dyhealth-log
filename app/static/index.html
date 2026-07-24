@@ -15,14 +15,13 @@
 </head>
 <body>
 
-<!-- ══════════ 로그인 · 회원가입 화면 ══════════ -->
+<!-- ══════════ 로그인 · 회원가입 ══════════ -->
 <div class="auth" id="authView" hidden>
   <div class="auth__card">
 
     <div class="auth__brand">DY <em>헬스 로그</em></div>
     <p class="auth__tag">매일의 수치를 남기면, 상태를 대신 읽어드립니다.</p>
 
-    <!-- 로그인 / 회원가입 전환 -->
     <div class="seg" id="seg">
       <button class="is-on" data-mode="login">로그인</button>
       <button data-mode="register">회원가입</button>
@@ -64,7 +63,7 @@
   </header>
 
   <nav class="chips" id="chips">
-    <button class="chip is-on" data-days="0">전체</button>
+    <button class="chip is-on" data-days="0">전체 기록</button>
     <button class="chip" data-days="7">최근 7일</button>
     <button class="chip" data-days="30">최근 30일</button>
   </nav>
@@ -92,20 +91,20 @@
 
   <div class="sheet__body">
     <div class="field">
-      <label for="fDate">측정일</label>
+      <label for="fDate">측정일 <span>달력에서 선택</span></label>
       <input id="fDate" type="date">
     </div>
 
     <div class="grid2">
       <div class="field">
-        <label for="fWeight">몸무게 <span>kg</span></label>
+        <label for="fWeight">몸무게 <span>40~180kg</span></label>
         <input id="fWeight" type="number" inputmode="decimal"
-               step="0.1" min="0.1" max="499.9" placeholder="68.5">
+               step="0.1" min="40" max="180" placeholder="68.5">
       </div>
       <div class="field">
-        <label for="fHeight">키 <span>cm</span></label>
+      <label for="fHeight">키 <span>110~240cm</span></label>
         <input id="fHeight" type="number" inputmode="decimal"
-               step="0.1" min="50.1" max="299.9" placeholder="170">
+               step="0.1" min="110" max="240" placeholder="170">
       </div>
     </div>
 

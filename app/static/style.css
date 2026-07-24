@@ -1,63 +1,55 @@
 /* ============================================================
    DY 헬스 로그 — 스타일시트
-   구조: 1)토큰  2)기본  3)로그인화면  4)앱바  5)칩
-        6)피드/카드  7)게이지  8)FAB  9)바텀시트
-        10)폼  11)토스트  12)접근성·반응형
+   구조: 1)토큰  2)기본  3)로그인  4)앱바  5)칩
+        6)요약카드  7)아코디언  8)지표·게이지
+        9)대시보드·차트  10)FAB  11)바텀시트
+        12)폼  13)토스트  14)접근성·반응형
    ============================================================ */
 
 /* ── 1) 디자인 토큰 ─────────────────────────────────────── */
 :root{
-  /* 색: 잉크(글자) */
   --ink:      #0F1B23;
   --ink-60:   #566873;
   --ink-40:   #8A99A3;
 
-  /* 색: 배경/면 */
   --paper:    #E6EAED;
   --surface:  #FFFFFF;
   --line:     #D2DAE0;
 
-  /* 색: 강조 */
   --accent:      #12615C;
   --accent-lift: #17756F;
   --accent-deep: #0C4643;
 
-  /* 색: 상태 */
   --ok:   #2E7D62;
   --warn: #A96F16;
   --risk: #B23B33;
 
-  /* 색: 구간 띠(게이지) */
+  /* 구간 띠 — 게이지와 차트 배경에 같은 색을 쓴다 */
   --t-low:  #CBDAE8;
   --t-ok:   #CDE3D8;
   --t-warn: #EFDFC0;
   --t-risk: #EFD2CF;
 
-  /* 서체 */
   --sans: "Pretendard","Pretendard Variable",-apple-system,BlinkMacSystemFont,system-ui,sans-serif;
   --mono: "IBM Plex Mono",ui-monospace,SFMono-Regular,Menlo,monospace;
 
-  /* 여백 · 모서리 */
   --gap:   14px;
   --pad:   18px;
   --r-sm:  8px;
   --r-md:  14px;
   --r-lg:  22px;
 
-  /* 그림자 */
   --sh-card: 0 1px 2px rgba(15,27,35,.06), 0 4px 14px rgba(15,27,35,.05);
   --sh-fab:  0 6px 20px rgba(18,97,92,.38);
   --sh-sheet:0 -8px 40px rgba(15,27,35,.22);
 
-  /* 안전영역(노치 대응) */
   --safe-b: env(safe-area-inset-bottom, 0px);
 }
 
 /* ── 2) 기본 ──────────────────────────────────────────── */
 *{ box-sizing:border-box; margin:0; padding:0; }
 
-/* hidden 속성이 항상 이기도록.
-   .sheet{display:flex} 같은 클래스가 브라우저 기본 스타일을 덮기 때문에 필요. */
+/* hidden이 항상 이기도록 (클래스가 브라우저 기본 스타일을 덮기 때문) */
 [hidden]{ display:none !important; }
 
 html,body{ height:100%; }
@@ -86,7 +78,7 @@ input,textarea,select{ font-family:inherit; }
   padding-bottom:calc(96px + var(--safe-b));
 }
 
-/* ── 3) 로그인 · 회원가입 화면 ────────────────────────── */
+/* ── 3) 로그인 · 회원가입 ────────────────────────────── */
 .auth{
   min-height:100%;
   display:grid;
@@ -105,11 +97,7 @@ input,textarea,select{ font-family:inherit; }
   animation:rise .3s ease both;
 }
 
-.auth__brand{
-  font-size:20px;
-  font-weight:700;
-  letter-spacing:-.02em;
-}
+.auth__brand{ font-size:20px; font-weight:700; letter-spacing:-.02em; }
 .auth__brand em{ font-style:normal; color:var(--accent); }
 
 .auth__tag{
@@ -119,7 +107,6 @@ input,textarea,select{ font-family:inherit; }
   line-height:1.45;
 }
 
-/* 로그인 / 회원가입 전환 */
 .seg{
   display:grid;
   grid-template-columns:1fr 1fr;
@@ -176,12 +163,7 @@ input,textarea,select{ font-family:inherit; }
   color:#fff;
 }
 
-.appbar__brand{
-  font-size:16px;
-  font-weight:700;
-  letter-spacing:-.02em;
-  white-space:nowrap;
-}
+.appbar__brand{ font-size:16px; font-weight:700; letter-spacing:-.02em; white-space:nowrap; }
 .appbar__brand em{ font-style:normal; color:#6FCBAF; }
 
 .appbar__user{
@@ -211,7 +193,7 @@ input,textarea,select{ font-family:inherit; }
 }
 .ghost-btn:hover{ border-color:#5A7180; color:#fff; }
 
-/* ── 5) 기간 필터 칩 ──────────────────────────────────── */
+/* ── 5) 기간 칩 ───────────────────────────────────────── */
 .chips{
   position:sticky;
   top:56px;
@@ -230,6 +212,7 @@ input,textarea,select{ font-family:inherit; }
   color:var(--ink-60);
   font-size:12.5px;
   font-weight:600;
+  white-space:nowrap;
   transition:background .16s, color .16s, border-color .16s;
 }
 .chip.is-on{
@@ -238,7 +221,7 @@ input,textarea,select{ font-family:inherit; }
   color:#fff;
 }
 
-/* ── 6) 피드 & 카드 ───────────────────────────────────── */
+/* ── 6) 피드 · 요약 카드 ──────────────────────────────── */
 .feed{
   display:flex;
   flex-direction:column;
@@ -246,12 +229,11 @@ input,textarea,select{ font-family:inherit; }
   padding:2px var(--pad) 0;
 }
 
-/* 요약 카드 (통계) */
 .summary{
+  padding:16px 18px;
+  border-radius:var(--r-md);
   background:var(--ink);
   color:#fff;
-  border-radius:var(--r-md);
-  padding:16px 18px;
   box-shadow:var(--sh-card);
 }
 .summary__label{
@@ -262,11 +244,7 @@ input,textarea,select{ font-family:inherit; }
   color:#7E939F;
   text-transform:uppercase;
 }
-.summary__grid{
-  display:grid;
-  grid-template-columns:repeat(4,1fr);
-  gap:8px;
-}
+.summary__grid{ display:grid; grid-template-columns:repeat(4,1fr); gap:8px; }
 .summary__cell{ min-width:0; }
 .summary__num{
   display:block;
@@ -283,68 +261,109 @@ input,textarea,select{ font-family:inherit; }
   white-space:nowrap;
 }
 
-/* 기록 카드 */
-.card{
-  position:relative;
-  padding:16px 18px 18px 20px;
-  border-radius:var(--r-md);
-  background:var(--surface);
-  box-shadow:var(--sh-card);
-  overflow:hidden;
-  animation:rise .28s ease both;
-}
-
-/* 왼쪽 상태 띠 — 그날의 가장 나쁜 항목 색 */
-.card::before{
-  content:"";
-  position:absolute;
-  left:0; top:0; bottom:0;
-  width:4px;
-  background:var(--stripe, var(--ok));
-}
-
 @keyframes rise{
   from{ opacity:0; transform:translateY(8px); }
   to  { opacity:1; transform:none; }
 }
 
-.card__top{
-  display:flex;
-  align-items:flex-start;
-  gap:10px;
-  margin-bottom:16px;
+/* ── 7) 날짜 아코디언 ─────────────────────────────────── */
+/* 접힌 줄에는 날짜와 요약만, 펼치면 상세가 나온다. */
+.acc{
+  position:relative;
+  border-radius:var(--r-md);
+  background:var(--surface);
+  box-shadow:var(--sh-card);
+  overflow:hidden;
+  animation:rise .26s ease both;
 }
-.card__date{
+
+/* 왼쪽 상태 띠 — 그날 가장 나쁜 항목 색 */
+.acc::before{
+  content:"";
+  position:absolute;
+  left:0; top:0; bottom:0;
+  width:4px;
+  background:var(--stripe, var(--ok));
+  z-index:1;
+}
+
+.acc__head{
+  display:flex;
+  align-items:center;
+  gap:10px;
+  width:100%;
+  padding:14px 16px 14px 20px;
+  text-align:left;
+  transition:background .15s;
+}
+.acc__head:hover{ background:#F7F9FA; }
+
+.acc__date{
+  flex:none;
   font-family:var(--mono);
-  font-size:15px;
+  font-size:14.5px;
   font-weight:500;
   letter-spacing:-.01em;
 }
-.card__day{
-  margin-left:5px;
+.acc__date em{
+  margin-left:4px;
+  font-style:normal;
   font-family:var(--sans);
-  font-size:12px;
+  font-size:11.5px;
   color:var(--ink-40);
 }
-.card__sub{
-  margin-top:3px;
+
+.acc__peek{
+  font-family:var(--mono);
+  font-size:12px;
+  color:var(--ink-40);
+  white-space:nowrap;
+  overflow:hidden;
+  text-overflow:ellipsis;
+}
+
+.acc__chev{
+  flex:none;
+  margin-left:auto;
+  color:var(--ink-40);
+  transition:transform .22s ease;
+}
+.acc.is-open .acc__chev{ transform:rotate(180deg); }
+
+.acc__body{
+  padding:2px 18px 18px 20px;
+  border-top:1px solid var(--line);
+  animation:unfold .24s ease both;
+}
+@keyframes unfold{
+  from{ opacity:0; transform:translateY(-4px); }
+  to  { opacity:1; transform:none; }
+}
+
+.acc__meta{
+  margin:12px 0 14px;
   font-family:var(--mono);
   font-size:11px;
   color:var(--ink-40);
 }
-.card__del{
-  margin-left:auto;
-  flex:none;
-  padding:4px 9px;
+
+.acc__foot{
+  display:flex;
+  justify-content:flex-end;
+  margin-top:14px;
+}
+.btn-del{
+  padding:5px 11px;
   border:1px solid var(--line);
   border-radius:var(--r-sm);
   color:var(--ink-40);
   font-family:var(--mono);
   font-size:11px;
+  transition:color .15s, border-color .15s;
 }
-.card__del:hover{ color:var(--risk); border-color:var(--risk); }
+.btn-del:hover{ color:var(--risk); border-color:var(--risk); }
 
-/* 지표 한 줄 */
+/* ── 8) 지표 · 게이지 ─────────────────────────────────── */
 .metric{ margin-bottom:15px; }
 .metric:last-of-type{ margin-bottom:0; }
 
@@ -362,13 +381,8 @@ input,textarea,select{ font-family:inherit; }
   letter-spacing:.08em;
   color:var(--ink-60);
 }
-.metric__val{
-  font-family:var(--mono);
-  font-size:16px;
-  font-weight:500;
-}
+.metric__val{ font-family:var(--mono); font-size:16px; font-weight:500; }
 
-/* 분류 배지 */
 .tag{
   margin-left:auto;
   flex:none;
@@ -382,7 +396,6 @@ input,textarea,select{ font-family:inherit; }
 .tag--risk{ background:var(--t-risk); color:#8C2C25; }
 .tag--low { background:var(--t-low);  color:#2C4A63; }
 
-/* 혈압은 게이지 두 개를 나란히 */
 .bp{ display:grid; grid-template-columns:1fr 1fr; gap:12px; }
 .bp small{
   display:block;
@@ -390,6 +403,42 @@ input,textarea,select{ font-family:inherit; }
   font-family:var(--mono);
   font-size:9.5px;
   color:var(--ink-40);
+}
+
+/* 구간 게이지 — 분류 구간을 띠로 깔고 현재값을 마커로 찍는다 */
+.gauge{ position:relative; height:8px; margin-bottom:3px; }
+.gauge__track{
+  display:flex;
+  gap:1px;
+  height:100%;
+  border-radius:2px;
+  overflow:hidden;
+}
+.gauge__track span{ display:block; }
+
+.gauge__mark{
+  position:absolute;
+  top:-3px;
+  width:2px;
+  height:14px;
+  background:var(--ink);
+  transform:translateX(-1px);
+}
+.gauge__mark::before{
+  content:"";
+  position:absolute;
+  top:-4px; left:-2px;
+  border:3px solid transparent;
+  border-top-color:var(--ink);
+}
+
+.ticks{ display:flex; gap:1px; }
+.ticks span{
+  padding-right:2px;
+  font-family:var(--mono);
+  font-size:9.5px;
+  color:var(--ink-40);
+  text-align:right;
 }
 
 .memo{
@@ -437,49 +486,141 @@ input,textarea,select{ font-family:inherit; }
   font-size:15px;
 }
 
-/* ── 7) 구간 게이지 (이 앱의 시그니처) ─────────────────── */
-/* 숫자만으로는 판단이 어려우므로, 분류 구간을 띠로 깔고
-   내 값의 위치를 삼각 마커로 찍는다. */
-.gauge{
-  position:relative;
-  height:8px;
-  margin-bottom:3px;
+/* ── 9) 대시보드 · 추세 차트 ──────────────────────────── */
+.dash-head{
+  display:flex;
+  align-items:baseline;
+  gap:8px;
+  padding:2px 2px 0;
 }
-.gauge__track{
+.dash-head h2{ font-size:15px; font-weight:700; letter-spacing:-.01em; }
+.dash-head span{
+  font-family:var(--mono);
+  font-size:11px;
+  color:var(--ink-40);
+}
+
+/* 기간 요약 4칸 */
+.stats{
+  display:grid;
+  grid-template-columns:repeat(2,1fr);
+  gap:10px;
+}
+.stat{
+  padding:14px 15px;
+  border-radius:var(--r-md);
+  background:var(--surface);
+  box-shadow:var(--sh-card);
+}
+.stat__cap{
+  font-size:10.5px;
+  font-weight:600;
+  letter-spacing:.1em;
+  color:var(--ink-40);
+  text-transform:uppercase;
+}
+.stat__num{
+  display:block;
+  margin-top:5px;
+  font-family:var(--mono);
+  font-size:22px;
+  font-weight:500;
+  letter-spacing:-.02em;
+}
+.stat__num small{ font-size:13px; color:var(--ink-40); }
+.stat__sub{
+  display:block;
+  margin-top:3px;
+  font-size:11px;
+  color:var(--ink-40);
+}
+
+/* 분류 분포 막대 */
+.dist{
+  padding:15px 16px;
+  border-radius:var(--r-md);
+  background:var(--surface);
+  box-shadow:var(--sh-card);
+}
+.dist__title{
+  margin-bottom:11px;
+  font-size:11px;
+  font-weight:600;
+  letter-spacing:.1em;
+  color:var(--ink-60);
+  text-transform:uppercase;
+}
+.dist__row{ margin-bottom:11px; }
+.dist__row:last-child{ margin-bottom:0; }
+.dist__name{
+  margin-bottom:5px;
+  font-size:11.5px;
+  color:var(--ink-60);
+}
+.dist__bar{
   display:flex;
   gap:1px;
-  height:100%;
+  height:9px;
   border-radius:2px;
   overflow:hidden;
 }
-.gauge__track span{ display:block; }
-
-.gauge__mark{
-  position:absolute;
-  top:-3px;
-  width:2px;
-  height:14px;
-  background:var(--ink);
-  transform:translateX(-1px);
-}
-.gauge__mark::before{
-  content:"";
-  position:absolute;
-  top:-4px; left:-2px;
-  border:3px solid transparent;
-  border-top-color:var(--ink);
-}
-
-.ticks{ display:flex; gap:1px; }
-.ticks span{
-  padding-right:2px;
+.dist__bar span{ display:block; }
+.dist__legend{
+  margin-top:5px;
   font-family:var(--mono);
-  font-size:9.5px;
+  font-size:10px;
   color:var(--ink-40);
-  text-align:right;
 }
 
-/* ── 8) 플로팅 추가 버튼 ──────────────────────────────── */
+/* 추세 차트 */
+.chart{
+  padding:15px 14px 12px;
+  border-radius:var(--r-md);
+  background:var(--surface);
+  box-shadow:var(--sh-card);
+  animation:rise .26s ease both;
+}
+.chart__head{
+  display:flex;
+  align-items:baseline;
+  gap:8px;
+  margin-bottom:10px;
+  padding:0 3px;
+}
+.chart__title{
+  font-size:11.5px;
+  font-weight:600;
+  letter-spacing:.08em;
+  color:var(--ink-60);
+  text-transform:uppercase;
+}
+.chart__last{
+  margin-left:auto;
+  font-family:var(--mono);
+  font-size:14px;
+  font-weight:500;
+}
+.chart__last small{ font-size:10px; color:var(--ink-40); margin-left:2px; }
+
+.chart svg{ display:block; width:100%; height:auto; }
+.chart__empty{
+  padding:28px 0;
+  text-align:center;
+  color:var(--ink-40);
+  font-size:12.5px;
+}
+
+/* 차트 내부 요소 */
+.c-band{ opacity:.85; }
+.c-line{ fill:none; stroke:var(--ink); stroke-width:1.8;
+         stroke-linejoin:round; stroke-linecap:round; }
+.c-line--sub{ stroke:var(--ink-40); stroke-width:1.3; stroke-dasharray:3 2; }
+.c-dot{ fill:var(--surface); stroke:var(--ink); stroke-width:1.5; }
+.c-dot--last{ fill:var(--ink); }
+.c-axis{ font-family:var(--mono); font-size:8.5px; fill:var(--ink-40); }
+.c-grid{ stroke:var(--line); stroke-width:.6; }
+
+/* ── 10) 플로팅 추가 버튼 ─────────────────────────────── */
 .fab{
   position:fixed;
   right:calc(50% - 240px + var(--pad));
@@ -501,7 +642,7 @@ input,textarea,select{ font-family:inherit; }
   .fab{ right:var(--pad); }
 }
 
-/* ── 9) 바텀시트 ──────────────────────────────────────── */
+/* ── 11) 바텀시트 ─────────────────────────────────────── */
 .scrim{
   position:fixed;
   inset:0;
@@ -543,11 +684,7 @@ input,textarea,select{ font-family:inherit; }
   padding:10px var(--pad) 12px;
   border-bottom:1px solid var(--line);
 }
-.sheet__head h2{
-  font-size:16px;
-  font-weight:700;
-  letter-spacing:-.01em;
-}
+.sheet__head h2{ font-size:16px; font-weight:700; letter-spacing:-.01em; }
 
 .icon-btn{
   margin-left:auto;
@@ -571,7 +708,7 @@ input,textarea,select{ font-family:inherit; }
   background:var(--surface);
 }
 
-/* ── 10) 폼 ───────────────────────────────────────────── */
+/* ── 12) 폼 ───────────────────────────────────────────── */
 .field{ margin-bottom:13px; }
 .field:last-child{ margin-bottom:0; }
 
@@ -583,11 +720,7 @@ input,textarea,select{ font-family:inherit; }
   letter-spacing:.04em;
   color:var(--ink-60);
 }
-.field label span{
-  font-weight:400;
-  letter-spacing:0;
-  color:var(--ink-40);
-}
+.field label span{ font-weight:400; letter-spacing:0; color:var(--ink-40); }
 
 .field input,
 .field textarea{
@@ -600,11 +733,7 @@ input,textarea,select{ font-family:inherit; }
   font-family:var(--mono);
   font-size:16px;          /* iOS 자동 확대 방지: 16px 미만 금지 */
 }
-.field textarea{
-  font-family:var(--sans);
-  font-size:15px;
-  resize:vertical;
-}
+.field textarea{ font-family:var(--sans); font-size:15px; resize:vertical; }
 .field input:focus,
 .field textarea:focus{
   outline:none;
@@ -612,6 +741,9 @@ input,textarea,select{ font-family:inherit; }
   background:#fff;
   box-shadow:0 0 0 3px rgba(18,97,92,.12);
 }
+
+/* 날짜칸: 타이핑 대신 달력으로만 고르게 하므로 커서를 손가락 모양으로 */
+.field input[type="date"]{ cursor:pointer; caret-color:transparent; }
 
 .grid2{ display:grid; grid-template-columns:1fr 1fr; gap:10px; }
 
@@ -628,7 +760,7 @@ input,textarea,select{ font-family:inherit; }
 .btn--primary:active{ background:var(--accent-deep); transform:scale(.99); }
 .btn[disabled]{ opacity:.55; pointer-events:none; }
 
-/* ── 11) 토스트 ───────────────────────────────────────── */
+/* ── 13) 토스트 ───────────────────────────────────────── */
 .toast{
   position:fixed;
   left:50%;
@@ -659,7 +791,7 @@ input,textarea,select{ font-family:inherit; }
   to  { opacity:1; transform:translate(-50%, 0); }
 }
 
-/* ── 12) 접근성 · 반응형 ──────────────────────────────── */
+/* ── 14) 접근성 · 반응형 ──────────────────────────────── */
 @media (prefers-reduced-motion: reduce){
   *,*::before,*::after{
     animation-duration:.001ms !important;
@@ -667,10 +799,84 @@ input,textarea,select{ font-family:inherit; }
   }
 }
 
-/* 데스크톱: 폰 프레임처럼 보이도록 살짝 띄움 */
 @media (min-width:521px){
   body{ background:#DDE3E7; }
-  .phone{
-    box-shadow:0 0 0 1px var(--line), 0 20px 60px rgba(15,27,35,.1);
-  }
+  .phone{ box-shadow:0 0 0 1px var(--line), 0 20px 60px rgba(15,27,35,.1); }
 }
+
+/* ============================================================
+   ▼ 아래 내용을 style.css 맨 끝에 붙여넣으세요.
+     (기존 규칙은 수정할 필요 없습니다)
+   ============================================================ */
+
+/* ── 월 단위 그룹 ─────────────────────────────────────── */
+/* 전체 기록을 월로 묶고, 월을 열면 그 달의 날짜 목록이 나온다. */
+.month{
+  position:relative;
+  border-radius:var(--r-md);
+  background:var(--surface);
+  box-shadow:var(--sh-card);
+  overflow:hidden;
+  animation:rise .26s ease both;
+}
+
+/* 왼쪽 띠 — 그달에서 가장 나쁜 등급의 색 */
+.month::before{
+  content:"";
+  position:absolute;
+  left:0; top:0; bottom:0;
+  width:4px;
+  background:var(--stripe, var(--ok));
+  z-index:1;
+}
+
+.month__head{
+  display:flex;
+  align-items:center;
+  gap:10px;
+  width:100%;
+  padding:15px 16px 15px 20px;
+  text-align:left;
+  transition:background .15s;
+}
+.month__head:hover{ background:#F7F9FA; }
+
+.month__title{
+  font-size:15px;
+  font-weight:700;
+  letter-spacing:-.01em;
+}
+
+.month__meta{
+  font-size:11.5px;
+  color:var(--ink-40);
+  white-space:nowrap;
+}
+.month__meta b{ font-weight:600; color:var(--warn); }
+
+.month__chev{
+  flex:none;
+  margin-left:auto;
+  color:var(--ink-40);
+  transition:transform .22s ease;
+}
+.month.is-open .month__chev{ transform:rotate(180deg); }
+
+.month__list{
+  border-top:1px solid var(--line);
+  animation:unfold .24s ease both;
+}
+
+/* 월 안에 들어간 날짜 줄은 카드가 아니라 목록 항목처럼 보이게 */
+.month .acc{
+  border-radius:0;
+  box-shadow:none;
+  animation:none;
+  border-bottom:1px solid var(--line);
+}
+.month .acc:last-child{ border-bottom:none; }
+
+/* 월 띠와 겹치지 않도록 날짜 줄의 띠는 살짝 안쪽에 */
+.month .acc::before{ left:0; width:3px; }
+.month .acc__head{ padding-left:18px; }
+.month .acc__body{ padding-left:18px; }
